@@ -4,7 +4,7 @@ from unicodedata import category
 from django.shortcuts import render
 from django.views import View
 from .models import Customer, Product, Cart, OrderPlaced
-from .forms import CustomerRegistrationForm
+from .forms import CustomerRegistrationForm,CustomerProfileForm
 from django.contrib import messages
 
 # def home(request):
@@ -24,9 +24,6 @@ class ProductView(View):
 			'laptops': laptops,
 		}
 		return render(request, 'ecomapp/home.html', context)
-
-# def product_detail(request):
-#  return render(request, 'ecomapp/productdetail.html')
 
 
 class ProductDetailView(View):
@@ -56,10 +53,6 @@ def address(request):
 
 def orders(request):
  return render(request, 'ecomapp/orders.html')
-
-
-def change_password(request):
- return render(request, 'ecomapp/changepassword.html')
 
 
 def mobile(request,data=None):
@@ -163,3 +156,12 @@ class CustomerRegistrationView(View):
 
 def checkout(request):
 	return render(request, 'ecomapp/checkout.html')
+
+
+class ProfileView(View):
+	def get(self,request):
+		form=CustomerProfileForm()
+		context={
+			'form':form
+		}
+		return render(request,'ecomapp/profile.html',context)
