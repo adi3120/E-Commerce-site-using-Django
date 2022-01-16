@@ -1,5 +1,6 @@
 from distutils.config import PyPIRCCommand
 from itertools import product
+from sre_constants import SUCCESS
 from unicodedata import category
 from django.shortcuts import render
 from django.views import View
@@ -48,7 +49,12 @@ def profile(request):
 
 
 def address(request):
- return render(request, 'ecomapp/address.html')
+	add=Customer.objects.filter(user=request.user)
+	context={
+		'address':add,
+		'active':'btn-primary',
+	}
+	return render(request, 'ecomapp/address.html',context)
 
 
 def orders(request):
@@ -162,6 +168,27 @@ class ProfileView(View):
 	def get(self,request):
 		form=CustomerProfileForm()
 		context={
-			'form':form
+			'form':form,
+			'active':'btn-primary',
+		}
+		return render(request,'ecomapp/profile.html',context)
+	def post(self,request):
+		form=CustomerProfileForm(request.POST)
+		if form.is_valid():
+			usr=request.user
+			name=form.cleaned_data['name']
+			locality=form.cleaned_data['locality']
+			city=form.cleaned_data['city']
+			state=form.cleaned_data['state']
+			zipcode=form.cleaned_data['zipcode']
+
+			reg=Customer(user=usr,name=name,locality=locality,city=city,state=state,zipcode=zipcode)
+
+			reg.save()
+
+			messages.success(request,'Congratulations!! Profile Updated Successfully')
+		context={
+			'form':form,
+			'active':'btn-primary',
 		}
 		return render(request,'ecomapp/profile.html',context)
