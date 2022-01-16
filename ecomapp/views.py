@@ -1,5 +1,6 @@
 from distutils.config import PyPIRCCommand
 from itertools import product
+from multiprocessing import context
 from sre_constants import SUCCESS
 from unicodedata import category
 from django.shortcuts import render,redirect
@@ -9,6 +10,8 @@ from .forms import CustomerRegistrationForm,CustomerProfileForm
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 # def home(request):
@@ -47,6 +50,7 @@ def add_to_cart(request):
 
 	return redirect('/cart')
 
+@login_required
 def show_cart(request):
 	if request.user.is_authenticated:
 		user=request.user
@@ -128,6 +132,7 @@ def minus_cart(request):
 
 		return JsonResponse(data)
 
+@login_required
 def remove_cart(request):
 	if request.method=="GET":
 		prod_id=request.GET['prod_id']
@@ -272,7 +277,7 @@ class CustomerRegistrationView(View):
 		return render(request, 'ecomapp/customerregistration.html',context)
 		
 
-
+@login_required
 def checkout(request):
 	user=request.user
 	add=Customer.objects.filter(user=user)
@@ -298,7 +303,7 @@ def checkout(request):
 	}
 	return render(request, 'ecomapp/checkout.html',context)
 
-
+@method_decorator(login_required,name='dispatch')
 class ProfileView(View):
 	def get(self,request):
 		form=CustomerProfileForm()
@@ -327,3 +332,27 @@ class ProfileView(View):
 			'active':'btn-primary',
 		}
 		return render(request,'ecomapp/profile.html',context)
+@login_required
+def payment_done(request):
+	user=request.user
+	custid=request.GET.get('custid')
+	customer=Customer.objects.get(id=custid)
+	cart=Cart.objects.filter(user=user)
+
+
+	for c in cart:
+		OrderPlaced(user=user,customer=customer,product=c.product,quantity=c.quantity).save()
+
+		c.delete()
+
+	return redirect("orders")
+
+@login_required
+def orders(request):
+	op=OrderPlaced.objects.filter(user=request.user)
+
+	context={
+		'order_placed':op,
+	}
+
+	return render(request,'ecomapp/orders.html',context)
