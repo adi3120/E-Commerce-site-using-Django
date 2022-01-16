@@ -37,9 +37,15 @@ class ProductDetailView(View):
 
 
 def add_to_cart(request):
- return render(request, 'ecomapp/addtocart.html')
+	user=request.user
+	product_id=request.GET.get('prod_id')
+	product=Product.objects.get(id=product_id)
+	Cart(user=user,product=product).save()
 
+	return render(request, 'ecomapp/addtocart.html')
 
+def show_cart(request):
+	pass
 def buy_now(request):
  return render(request, 'ecomapp/buynow.html')
 
