@@ -127,7 +127,6 @@ def minus_cart(request):
 		}
 
 		return JsonResponse(data)
-<<<<<<< HEAD
 
 def remove_cart(request):
 	if request.method=="GET":
@@ -152,10 +151,6 @@ def remove_cart(request):
 	return JsonResponse(data)
 
 
-=======
- def remove_cart(request):
-	 
->>>>>>> 507bde26fe6293d533969e020c9646ed46fc8c35
 	
 
 def buy_now(request):
@@ -279,7 +274,29 @@ class CustomerRegistrationView(View):
 
 
 def checkout(request):
-	return render(request, 'ecomapp/checkout.html')
+	user=request.user
+	add=Customer.objects.filter(user=user)
+	cart_items=Cart.objects.filter(user=user)
+
+	amount=0.0
+	shipping_amount=70.0
+	totalamount=0.0
+
+	user=request.user
+	cart_product=[p for p in Cart.objects.all() if p.user==user]
+
+	for p in cart_product:
+		tempamount=(p.quantity * p.product.discounted_price)
+		amount+=tempamount
+
+	totalamount=amount+shipping_amount
+
+	context={
+		'address':add,
+		'total':totalamount,
+		'carts':cart_items,
+	}
+	return render(request, 'ecomapp/checkout.html',context)
 
 
 class ProfileView(View):
