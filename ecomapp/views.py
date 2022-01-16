@@ -127,7 +127,8 @@ def minus_cart(request):
 		}
 
 		return JsonResponse(data)
-
+ def remove_cart(request):
+	 
 	
 
 def buy_now(request):
