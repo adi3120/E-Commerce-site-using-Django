@@ -2,7 +2,7 @@ from distutils.config import PyPIRCCommand
 from itertools import product
 from sre_constants import SUCCESS
 from unicodedata import category
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
 from .models import Customer, Product, Cart, OrderPlaced
 from .forms import CustomerRegistrationForm,CustomerProfileForm
@@ -42,10 +42,43 @@ def add_to_cart(request):
 	product=Product.objects.get(id=product_id)
 	Cart(user=user,product=product).save()
 
-	return render(request, 'ecomapp/addtocart.html')
+	return redirect('/cart')
 
 def show_cart(request):
-	pass
+	if request.user.is_authenticated:
+		user=request.user
+		cart=Cart.objects.filter(user=user)
+		amount=0.0
+
+		shipping_amount=70.0
+
+		total_amount=0.0
+
+		# cart_product=[p for p in Cart.objects.all() if p.user == user]
+		cart_product=[]
+
+		for p in Cart.objects.all():
+			if p.user==user:
+				cart_product.append(p)
+				amount+=p.product.discounted_price*p.quantity+shipping_amount
+
+		total_amount=amount
+
+		print(cart_product)
+		print(amount)
+
+
+		context={
+			'carts':cart,
+			'amount':amount,
+			'total':total_amount,
+			'shipping':shipping_amount,
+		}
+		return render(request, 'ecomapp/addtocart.html',context)
+
+
+	
+
 def buy_now(request):
  return render(request, 'ecomapp/buynow.html')
 
