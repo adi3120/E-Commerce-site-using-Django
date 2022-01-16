@@ -127,6 +127,7 @@ def minus_cart(request):
 		}
 
 		return JsonResponse(data)
+<<<<<<< HEAD
 
 def remove_cart(request):
 	if request.method=="GET":
@@ -151,6 +152,10 @@ def remove_cart(request):
 	return JsonResponse(data)
 
 
+=======
+ def remove_cart(request):
+	 
+>>>>>>> 507bde26fe6293d533969e020c9646ed46fc8c35
 	
 
 def buy_now(request):
