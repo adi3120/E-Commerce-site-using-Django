@@ -61,3 +61,27 @@ $('.minus-cart').click(function() {
     })
 
 })
+
+$('#remove-cart').click(function() {
+    let id = $(this).attr("pid").toString();
+    let eml = this
+    console.log("remove");
+    $.ajax({
+        type: "GET",
+        url: "/removecart",
+        data: {
+            prod_id: id
+        },
+        success: function(data) {
+            console.log("Delete");
+            document.getElementById("amount").innerText = data.amount
+            document.getElementById("total").innerText = data.totalamount
+
+            eml.parentNode.parentNode.parentNode.parentNode.remove()
+
+
+
+        }
+    })
+
+})
