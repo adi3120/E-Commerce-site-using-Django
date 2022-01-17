@@ -7,6 +7,14 @@
 >> ♦ git clone https://github.com/adi3120/E-Commerce-site-using-Django.git .
 > 2) **Go into the directory where the manage.py file is located. Then open terminal there and run this .**
 >> ♦ python manage.py migrate 
+> 3) **Create admin account**
+>> ♦ python manage.py createsuperuser
+> 4) **Make migrations for the app**
+>> ♦ python manage.py makemigrations
+> 5) **Again migrate those changes**
+>> ♦ python manage.py migrate
+> 6) **Now run the development server**
+>> ♦ python manage.py runserver
 ***
 
 
