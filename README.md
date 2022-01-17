@@ -3,8 +3,10 @@
 ### To run this project on your localhost .
 ### follow these steps . 
 
-> 1) Clone this repo .
+> 1) **Clone this repo** .
 >> ♦ git clone https://github.com/adi3120/E-Commerce-site-using-Django.git .
+> 2) **Go into the directory where the manage.py file is located. Then open terminal there and run this .**
+>> ♦ python manage.py migrate 
 ***
 
 
